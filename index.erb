@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Derby</title>
+        <meta charset="utf-8" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<style type="text/css">
+			#statusContainer span { font-weight:bold; }
+		</style>
+    </head>
+
+    <body>
+        <ul id="statusContainer">
+			<li>
+				Websocket: <span id="socket_state">disconnected</span>
+			</li>
+			<li>
+				Serial Port: <span id="serial_state">disconnected</span>
+			</li>
+			<li>
+				Race: <span id="race_state">N/A</span>
+			</li>
+        </ul>
+		<a href="#" id="startButton">Start Race</a>
+		<textarea id="debug"></textarea>
+		
+        <script type="text/javascript">
+            var socket;
+			function sendEvent (evt, params) {
+				socket.send (JSON.stringify ({
+					'event': evt,
+					params: params
+				}));
+			}
+			function processMessage (data) {
+				switch (data.type) {
+					case 'socket_state':
+					case 'serial_state':
+					case 'race_state':
+						$("#" + data.type).text (data.state);
+						break;
+					case 'debug':
+						$("#debug").append (data.message + "\n");
+					default:
+						console.log ('Unknown message type: ' + data.type);
+						break;
+				}
+			}
+
+            function connect () {
+                socket = new WebSocket("ws://localhost:7777");
+
+                socket.onmessage = function (evt) {
+					processMessage (JSON.parse (evt.data));
+                };
+            }
+			$("#startButton").on ('click', function (e) {
+				e.preventDefault ();
+				sendEvent('start_click', { });
+			});
+			connect ();
+
+        </script>
+    </body>
+</html>
