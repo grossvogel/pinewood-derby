@@ -1,0 +1,140 @@
+$color_bg: #111;
+$color_fg: #eee;
+body{
+	padding:0;
+	margin: 0;
+	background:$color_bg;
+	font-family:'Cantarell', sans-serif;
+}
+
+#start, #stop{
+	display:none;
+}
+body.Ready {
+	#start {	display:inline-block; }
+}
+body.Racing {
+	#stop {	display:inline-block; }
+}
+
+#view_race{
+	table{
+		width:100%;
+		background:$color_fg;
+		color:$color_bg;
+		font-size:48px;
+		border-top:20px solid $color_bg;
+		border-right:20px solid $color_bg;
+		td{
+			padding: 0.2em 0;
+			border-bottom: 20px solid $color_bg;
+		}
+		.lane{
+			background:$color_bg;
+			color:#fff;
+		}
+		.lane{
+			width: 10%;
+			font-size:60px;
+			text-align:center;
+		}
+		.racer{
+			width: 50%;
+			input{
+				font-size:48px;
+				border:0;
+				margin-left: 0.5em;
+				background:$color_fg;
+			}
+		}
+		.time{
+			width: 15%;
+		}
+		.diff{
+			width: 15%;
+		}
+		.place{
+			text-align:center;
+			width: 10%;
+			span{
+				$size: 70px;
+				font-size:48px;
+				display:inline-block;
+				width:$size;
+				height:$size;
+				line-height:$size;
+				border-radius:$size / 2;
+				background:$color_bg;
+				color:$color_fg;
+			}
+		}
+	}
+
+	.buttons{
+		margin:1em 0 1em 10%;
+		.button{
+			margin-right: 1em;
+		}
+	}
+}
+
+#dev{
+	position:fixed;
+	border-top: 1px solid #ccc;
+	background:#f3f3f3;
+	bottom: 0;
+	width:100%;
+	padding: 20px;
+	&.max #debug{
+		height: 700px;
+	}
+
+	#statusContainer {
+		float:right;
+		width: 20%;
+		text-align:right;
+		margin: 0 20px 0 0;
+		li{ list-style:none; }
+		span {
+			font-weight:bold;
+			display:inline-block;
+			width: 140px;
+			text-align:left;
+		}
+	}
+	#debug{
+		float:left;
+		height: 80px;
+		width: 70%;
+	}
+	#toggle_dev{
+		display:inline-block;
+		font-size: 24px;
+		text-decoration:none;
+		background:#000;
+		color:#fff;
+		border-radius: 4px;
+		padding: 4px;
+	}
+}
+
+//	utilities
+.clear{
+	clear:both;
+	height:0;
+	overflow:hidden;
+}
+.button{
+	display:inline-block;
+	background:$color_fg;
+	border-radius: 4px;
+	padding: 6px 12px;
+	font-size: 24px;
+	font-weight:bold;
+	text-decoration:none;
+	color:$color_bg;
+	&:hover{
+		background:lighten($color_fg, 20%);
+		color:darken($color_bg, 20%);
+	}
+}

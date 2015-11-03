@@ -4,62 +4,50 @@
         <title>Derby</title>
         <meta charset="utf-8" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-		<style type="text/css">
-			#statusContainer span { font-weight:bold; }
-		</style>
+        <script src="/js/main.js"></script>
+		<link rel="stylesheet" href="/css/main.css" type="text/css">
+		<link href='https://fonts.googleapis.com/css?family=Cantarell:400,700' rel='stylesheet' type='text/css'>
     </head>
 
-    <body>
-        <ul id="statusContainer">
-			<li>
-				Websocket: <span id="socket_state">disconnected</span>
-			</li>
-			<li>
-				Serial Port: <span id="serial_state">disconnected</span>
-			</li>
-			<li>
-				Race: <span id="race_state">N/A</span>
-			</li>
-        </ul>
-		<a href="#" id="startButton">Start Race</a>
-		<textarea id="debug"></textarea>
+    <body class="">
+		<div class="view" id="view_race">
+			<table cellspacing="0">
+				<tbody>
+					<% (1..4).each do |i| %>
+						<tr class="lane_<%= i %>">
+							<td class="lane"><%= i %></td>
+							<td class="racer"><input type="text" placeholder="Racer <%= i %>"/></td>
+							<td class="time"></td>
+							<td class="diff"></td>
+							<td class="place"></td>
+						</tr>
+					<% end %>
+				</tbody>
+			</table>
+			<div class="buttons">
+				<a href="#" class="button" id="rotate">Rotate</a>
+				<a href="#" class="button" id="reset">Clear</a>
+				<a href="#" class="button"  id="start">Start Race</a>
+				<a href="#" class="button"  id="stop">Stop Race</a>
+			</div>
+		</div>
+		<div id="dev">
+
+			<ul id="statusContainer">
+				<li>
+					Websocket: <span id="socket_state">disconnected</span>
+				</li>
+				<li>
+					Serial Port: <span id="serial_state">disconnected</span>
+				</li>
+				<li>
+					Race: <span id="race_state">N/A</span>
+				</li>
+			</ul>
+			<textarea id="debug"></textarea>
+			<a href="#" id="toggle_dev">&#8693;</a>
+			<div class="clear"></div>
+		</div>
 		
-        <script type="text/javascript">
-            var socket;
-			function sendEvent (evt, params) {
-				socket.send (JSON.stringify ({
-					'event': evt,
-					params: params
-				}));
-			}
-			function processMessage (data) {
-				switch (data.type) {
-					case 'socket_state':
-					case 'serial_state':
-					case 'race_state':
-						$("#" + data.type).text (data.state);
-						break;
-					case 'debug':
-						$("#debug").append (data.message + "\n");
-					default:
-						console.log ('Unknown message type: ' + data.type);
-						break;
-				}
-			}
-
-            function connect () {
-                socket = new WebSocket("ws://localhost:7777");
-
-                socket.onmessage = function (evt) {
-					processMessage (JSON.parse (evt.data));
-                };
-            }
-			$("#startButton").on ('click', function (e) {
-				e.preventDefault ();
-				sendEvent('start_click', { });
-			});
-			connect ();
-
-        </script>
     </body>
 </html>

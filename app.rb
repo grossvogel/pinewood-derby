@@ -5,11 +5,6 @@ require 'json'
 
 class App < WebsocketGui::Base
 
-	def initialize(options = {})
-		super
-		@serial_buffer = ''
-	end
-
 	tick_interval 1.0
 	
 	on_tick do |connected|
@@ -20,6 +15,15 @@ class App < WebsocketGui::Base
 
 	on_start_click do |params|
 		write_serial("0")
+	end
+
+	on_stop_click do |params|
+		write_serial("0")
+	end
+
+	def initialize(options = {})
+		super
+		@serial_buffer = ''
 	end
 
 	def update_socket_state(connected)
@@ -40,6 +44,20 @@ class App < WebsocketGui::Base
 		send({
 			type: 'race_state',
 			state: state
+		})
+	end
+
+	def record_finish(place, lane, time)
+		if place == "1"
+			@winning_time = time.to_f
+		end
+
+		send({
+			type: 'finish',
+			lane: lane,
+			time: time,
+			diff: time.to_f - @winning_time,
+			place: place,
 		})
 	end
 
@@ -87,6 +105,8 @@ class App < WebsocketGui::Base
 				case fields[0]
 					when 'state'
 						update_race_state(fields[1])
+					when 'finish'
+						record_finish(fields[1], fields[2], fields[3])
 					else
 						debug(line)
 				end
@@ -104,6 +124,10 @@ class App < WebsocketGui::Base
 			nil
 		end
 	end
+end
+
+class WebsocketGui::SinatraWrapper
+	set :public_folder, File.dirname(__FILE__) + '/assets'
 end
 
 app = App.new http_port: 3000, http_host: '127.0.0.1'

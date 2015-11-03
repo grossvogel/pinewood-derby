@@ -32,14 +32,14 @@ void loop ()
 	while (true) {
 		switch (state) {
 			case STATE_IDLE:
-				if (detectStartButton ()) {
-                                        setState(STATE_CALIBRATION, "Calibrating");
+				if (waitForStart ()) {
+                	setState(STATE_CALIBRATION, "Calibrating");
 				}
 				break;
 			case STATE_CALIBRATION:
 				calibrate ();
 				startRace ();
-                                setState(STATE_RACE, "Racing");
+                setState(STATE_RACE, "Racing");
 				break;
 			case STATE_RACE:
 				watchRace ();
@@ -59,19 +59,25 @@ void setState(int iState, char* sState) {
   Serial.println(sState);
 }
 
-bool detectStartButton () {
-        char c;
-	if (digitalRead (PIN_BUTTON) == HIGH) {
+bool waitForStart () {
+	if (buttonPushed ()) {
 		flashLED (1000);
 		return true;
-	} else if (Serial.available() > 0) {
-                  while (Serial.available () > 0) {
-                      c = Serial.read ();
-                  }
-                  return true;
-        } else {
+	} else {
 		delay (100);
 		return false;
+	}
+}
+
+bool buttonPushed () {
+	char c;
+	if (digitalRead (PIN_BUTTON) == HIGH) {
+		return true;
+	} else if (Serial.available() > 0) {
+		while (Serial.available () > 0) {
+			c = Serial.read ();
+		}
+		return true;
 	}
 }
 
@@ -136,16 +142,11 @@ void watchRace () {
 					aTimes[i] = elapsed;
 					aPlaces[finished] = i;
 					finished++;
-					if (DEBUG) {
-						Serial.print ("*** FINISHED: Lane ");
-						Serial.print (i + 1);
-						Serial.println (" ***");
-					}
 				}
 			}
 		}
 
-		if (finished >= 4 || elapsed > MAX_RACE_TIME || digitalRead(PIN_BUTTON) == HIGH) {
+		if (finished >= 4 || elapsed > MAX_RACE_TIME || buttonPushed ()) {
 			break;
 		}
 	}
@@ -153,39 +154,51 @@ void watchRace () {
 }
 
 void printTimes () {
-	Serial.println("");
-	Serial.println("--------------------------------");
-	Serial.println("        Race Results!");
-	Serial.println("--------------------------------");
-	Serial.println("");
-	if (aPlaces[0] >= 0) {
-		Serial.print ("In first place: Lane ");
-		Serial.println (aPlaces[0] + 1);
-		Serial.print ("   time: ");
-		Serial.println (aTimes[0]);
-	} 
-	if (aPlaces[1] >= 0) {
-		Serial.print ("In second place: Lane ");
-		Serial.println (aPlaces[1] + 1);
-		Serial.print ("   time: ");
-		Serial.println (aTimes[1]);
-	} 
-	if (aPlaces[2] >= 0) {
-		Serial.print ("In third place: Lane ");
-		Serial.println (aPlaces[2] + 1);
-		Serial.print ("   time: ");
-		Serial.println (aTimes[2]);
-	} 
-	if (aPlaces[3] >= 0) {
-		Serial.print ("In fourth place: Lane ");
-		Serial.println (aPlaces[3] + 1);
-		Serial.print ("   time: ");
-		Serial.println (aTimes[3]);
-	} else {
-		Serial.println ("And some of us need to work on making it all the way down the track!");
+	for (int i = 0; i < 4; i++) {
+		if (aPlaces[i] >= 0) {
+			Serial.print ("finish:");
+			Serial.print (i + 1);
+                        Serial.print (":");
+			Serial.print (aPlaces[i] + 1);
+                        Serial.print (":");
+			Serial.println (aTimes[aPlaces[i]]);
+		}
 	}
-	Serial.println("");
-        Serial.println("<<<");
+
+	if (DEBUG) {
+		Serial.println("");
+		Serial.println("--------------------------------");
+		Serial.println("        Race Results!");
+		Serial.println("--------------------------------");
+		Serial.println("");
+		if (aPlaces[0] >= 0) {
+			Serial.print ("In first place: Lane ");
+			Serial.println (aPlaces[0] + 1);
+			Serial.print ("   time: ");
+			Serial.println (aTimes[aPlaces[0]]);
+		} 
+		if (aPlaces[1] >= 0) {
+			Serial.print ("In second place: Lane ");
+			Serial.println (aPlaces[1] + 1);
+			Serial.print ("   time: ");
+			Serial.println (aTimes[aPlaces[1]]);
+		} 
+		if (aPlaces[2] >= 0) {
+			Serial.print ("In third place: Lane ");
+			Serial.println (aPlaces[2] + 1);
+			Serial.print ("   time: ");
+			Serial.println (aTimes[aPlaces[2]]);
+		} 
+		if (aPlaces[3] >= 0) {
+			Serial.print ("In fourth place: Lane ");
+			Serial.println (aPlaces[3] + 1);
+			Serial.print ("   time: ");
+			Serial.println (aTimes[aPlaces[3]]);
+		} else {
+			Serial.println ("And some of us need to work on making it all the way down the track!");
+		}
+		Serial.println("");
+	}
 }
 
 

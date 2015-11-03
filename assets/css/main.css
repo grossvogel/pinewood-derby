@@ -1,0 +1,111 @@
+body {
+  padding: 0;
+  margin: 0;
+  background: #111;
+  font-family: 'Cantarell', sans-serif; }
+
+#start, #stop {
+  display: none; }
+
+body.Ready #start {
+  display: inline-block; }
+
+body.Racing #stop {
+  display: inline-block; }
+
+#view_race table {
+  width: 100%;
+  background: #eee;
+  color: #111;
+  font-size: 48px;
+  border-top: 20px solid #111;
+  border-right: 20px solid #111; }
+  #view_race table td {
+    padding: 0.2em 0;
+    border-bottom: 20px solid #111; }
+  #view_race table .lane {
+    background: #111;
+    color: #fff; }
+  #view_race table .lane {
+    width: 10%;
+    font-size: 60px;
+    text-align: center; }
+  #view_race table .racer {
+    width: 50%; }
+    #view_race table .racer input {
+      font-size: 48px;
+      border: 0;
+      margin-left: 0.5em;
+      background: #eee; }
+  #view_race table .time {
+    width: 15%; }
+  #view_race table .diff {
+    width: 15%; }
+  #view_race table .place {
+    text-align: center;
+    width: 10%; }
+    #view_race table .place span {
+      font-size: 48px;
+      display: inline-block;
+      width: 70px;
+      height: 70px;
+      line-height: 70px;
+      border-radius: 35px;
+      background: #111;
+      color: #eee; }
+#view_race .buttons {
+  margin: 1em 0 1em 10%; }
+  #view_race .buttons .button {
+    margin-right: 1em; }
+
+#dev {
+  position: fixed;
+  border-top: 1px solid #ccc;
+  background: #f3f3f3;
+  bottom: 0;
+  width: 100%;
+  padding: 20px; }
+  #dev.max #debug {
+    height: 700px; }
+  #dev #statusContainer {
+    float: right;
+    width: 20%;
+    text-align: right;
+    margin: 0 20px 0 0; }
+    #dev #statusContainer li {
+      list-style: none; }
+    #dev #statusContainer span {
+      font-weight: bold;
+      display: inline-block;
+      width: 140px;
+      text-align: left; }
+  #dev #debug {
+    float: left;
+    height: 80px;
+    width: 70%; }
+  #dev #toggle_dev {
+    display: inline-block;
+    font-size: 24px;
+    text-decoration: none;
+    background: #000;
+    color: #fff;
+    border-radius: 4px;
+    padding: 4px; }
+
+.clear {
+  clear: both;
+  height: 0;
+  overflow: hidden; }
+
+.button {
+  display: inline-block;
+  background: #eee;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #111; }
+  .button:hover {
+    background: white;
+    color: black; }
